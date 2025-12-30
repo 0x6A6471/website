@@ -28,6 +28,10 @@
   --brightness-40: 0.4;
 
   --breakpoint-xs: 450px;
+
+
+  /* fonts */
+  --font-family-mono: var(--font-mono);
 }
 
 /*
@@ -62,6 +66,7 @@
     background: var(--background);
     font-family: "Satoshi", sans-serif;
   }
+
 
   button {
     cursor: default;

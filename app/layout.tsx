@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 
+import { Geist_Mono } from "next/font/google";
+
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
@@ -24,17 +26,22 @@ export const metadata: Metadata = {
 	},
 };
 
+const geistMono = Geist_Mono({
+	subsets: ["latin"],
+	variable: "--font-mono",
+});
+
 export default function RootLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en">
+		<html lang="en" className={geistMono.variable}>
 			<head>
 				<link href="https://fonts.cdnfonts.com/css/satoshi" rel="stylesheet" />
 			</head>
-			<body className="bg-gray-1000 text-gray-50 ">
+			<body className="bg-gray-1000 text-gray-50">
 				<Nav />
 
 				<main className="mx-auto mt-16 max-w-lg px-4 pb-28 sm:px-0">

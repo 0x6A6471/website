@@ -1,13 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Icon from "@/components/ui/icon";
+import { useEffect, useState } from "react";
 
-import { AnimatePresence, motion, useAnimationControls } from "framer-motion";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { AnimatePresence, motion, useAnimationControls } from "framer-motion";
 
 import cn from "@/utils/cn";
-import Link from "next/link";
 
 const variants = {
 	open: {
@@ -127,26 +126,38 @@ export default function ContactDropdown() {
 									Email
 								</DropdownMenu.Item>
 
-								<Link href="https://github.com/0x6a6471">
+								<a
+									href="https://github.com/0x6a6471"
+									target="_blank"
+									rel="noopener noreferrer"
+								>
 									<DropdownMenu.Item className="flex items-center gap-4 rounded-[14px] px-4 py-2.5 text-sm outline-hidden focus:bg-gray-800 focus:text-[#6cc644]">
 										<Icon name="github" variant="filled" />
 										Github
 									</DropdownMenu.Item>
-								</Link>
+								</a>
 
-								<Link href="https://primal.net/0x6a6471">
+								<a
+									href="https://primal.net/0x6a6471"
+									target="_blank"
+									rel="noopener noreferrer"
+								>
 									<DropdownMenu.Item className="flex items-center gap-4 rounded-[14px] px-4 py-2.5 text-sm outline-hidden focus:bg-gray-800 focus:text-[#6E56CF]">
 										<Icon name="nostr" variant="filled" />
 										Nostr
 									</DropdownMenu.Item>
-								</Link>
+								</a>
 
-								<Link href="https://x.com/0x6a6471">
+								<a
+									href="https://x.com/0x6a6471"
+									target="_blank"
+									rel="noopener noreferrer"
+								>
 									<DropdownMenu.Item className="flex items-center gap-4 rounded-[14px] px-4 py-2.5 text-sm outline-hidden focus:bg-gray-800 focus:text-[#1DA1F2]">
 										<Icon name="twitter" variant="filled" />
 										Twitter
 									</DropdownMenu.Item>
-								</Link>
+								</a>
 							</motion.div>
 						</DropdownMenu.Content>
 					</DropdownMenu.Portal>
