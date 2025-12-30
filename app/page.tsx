@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 
 import Time from "./time";
 
@@ -17,20 +16,19 @@ export default function HomePage() {
 				<Time />
 			</div>
 
-			<section className="space-y-2">
-				<p>Hi, I&apos;m jdq.</p>
+			<section className="space-y-3">
+				<p>Hey, I&apos;m jdq.</p>
+				<p>Into computers, design & freedom-tech.</p>
 				<p>
-					I like computers & design. My passion lies in creating technology that
-					protects individual privacy and digital freedom.
-				</p>
-				<p>
-					I&apos;m currently writing code to realize this vision at{" "}
-					<Link
+					Writing code at{" "}
+					<a
 						href="https://onrampbitcoin.com"
 						className="text-orange-primary underline-offset-2 hover:underline"
+						target="_blank"
+						rel="noopener noreferrer"
 					>
 						Onramp
-					</Link>
+					</a>
 					.
 				</p>
 			</section>

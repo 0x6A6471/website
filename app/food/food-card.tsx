@@ -4,7 +4,6 @@ import Icon from "@/components/ui/icon";
 import type { Food } from "@/types/food";
 import { CldImage } from "next-cloudinary";
 import Image from "next/image";
-import Link from "next/link";
 
 type Props = {
 	item: Food;
@@ -14,9 +13,11 @@ const FOLDER = process.env.NEXT_PUBLIC_CLOUDINARY_FOLDER_NAME;
 
 export default function FoodCard({ item }: Props) {
 	return (
-		<Link
+		<a
 			href={item.link}
 			className="group relative rounded-lg shadow-sm grayscale hover:cursor-pointer hover:grayscale-0"
+			target="_blank"
+			rel="noopener noreferrer"
 		>
 			<CldImage
 				src={`${FOLDER}/${item.cloudinary_public_id}`}
@@ -66,6 +67,6 @@ export default function FoodCard({ item }: Props) {
 					<p className="font-medium">{Number(item.other_rating).toFixed(1)}</p>
 				</div>
 			</div>
-		</Link>
+		</a>
 	);
 }
