@@ -138,7 +138,7 @@ export default function ContactDropdown() {
 								</a>
 
 								<a
-									href="https://primal.net/0x6a6471"
+									href="https://yakihonne.com/profile/0x6a6471@0x6a6471.com"
 									target="_blank"
 									rel="noopener noreferrer"
 								>
