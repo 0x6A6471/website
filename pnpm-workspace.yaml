@@ -1,0 +1,7 @@
+packages:
+  - '.'
+
+allowBuilds:
+  '@biomejs/biome': false
+  sharp: false
+  unrs-resolver: false

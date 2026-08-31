@@ -14,8 +14,8 @@ The code to my home on the internet.
 ```
 $ git clone git@github.com:0x6A6471/0x6a6471.git
 $ cd  0x6a6471
-$ bun install
-$ bun run dev
+$ pnpm install
+$ pnpm dev
 ```
 
 Create a `.env.local` file similar to what is posted below:

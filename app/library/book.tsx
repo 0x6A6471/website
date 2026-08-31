@@ -20,21 +20,22 @@ const overlayVariants = {
 
 export default function BookItem({ book }: Props) {
   const [isOpen, setIsOpen] = useState(false);
+  const [itemPosition, setItemPosition] = useState({ top: 0, left: 0 });
   const itemRef = useRef<HTMLButtonElement | null>(null);
 
-  const getItemPosition = () => {
-    if (!itemRef.current) return { top: 0, left: 0 };
-    const rect = itemRef.current.getBoundingClientRect();
-    const scaleY = rect.height / window.innerHeight;
-    return {
-      top: rect.top + rect.height / 2,
-      left: rect.left + rect.width / 2,
-      scaleY,
-    };
+  const handleOpenChange = (open: boolean) => {
+    if (open && itemRef.current) {
+      const rect = itemRef.current.getBoundingClientRect();
+      setItemPosition({
+        top: rect.top + rect.height / 2,
+        left: rect.left + rect.width / 2,
+      });
+    }
+    setIsOpen(open);
   };
 
   return (
-    <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog.Root open={isOpen} onOpenChange={handleOpenChange}>
       <Dialog.Trigger asChild ref={itemRef}>
         <button
           className={cn(
@@ -70,8 +71,8 @@ export default function BookItem({ book }: Props) {
                 <motion.div
                   initial={{
                     position: "fixed",
-                    top: getItemPosition().top,
-                    left: getItemPosition().left,
+                    top: itemPosition.top,
+                    left: itemPosition.left,
                     x: "-50%",
                     y: "-50%",
                     scale: 0,
@@ -84,8 +85,8 @@ export default function BookItem({ book }: Props) {
                     opacity: 1,
                   }}
                   exit={{
-                    top: getItemPosition().top,
-                    left: getItemPosition().left,
+                    top: itemPosition.top,
+                    left: itemPosition.left,
                     scale: 0.2,
                     opacity: 0,
                   }}
