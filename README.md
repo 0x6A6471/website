@@ -32,6 +32,8 @@ NEXT_PUBLIC_CLOUDINARY_FOLDER_NAME=
 OKU_READ_URL=
 OKU_TO_READ_URL=
 OKU_READING_URL=
+# optional: proxy used when Oku blocks direct requests (defaults to https://r.jina.ai)
+OKU_RSS_PROXY=
 ```
 
 ### Built With

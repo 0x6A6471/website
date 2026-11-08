@@ -1,9 +1,80 @@
 const FEED_TIMEOUT_MS = 15_000;
 
+const FEED_PROXY = (process.env.OKU_RSS_PROXY ?? "https://r.jina.ai").replace(
+	/\/$/,
+	"",
+);
+
 const feedHeaders = {
-	accept: "application/rss+xml, application/xml;q=0.9, text/xml;q=0.8, */*;q=0.1",
+	accept:
+		"application/rss+xml, application/xml;q=0.9, text/xml;q=0.8, */*;q=0.1",
 	"user-agent": "Mozilla/5.0 (compatible; 0x6a6471.com; +https://0x6a6471.com)",
 };
+
+type FeedResponse = {
+	ok: boolean;
+	status: number;
+	statusText: string;
+	contentType: string | null;
+	body: string;
+};
+
+function failedRequest(error: unknown): FeedResponse {
+	return {
+		ok: false,
+		status: 0,
+		statusText: error instanceof Error ? error.message : "request failed",
+		contentType: null,
+		body: "",
+	};
+}
+
+async function request(
+	url: string,
+	headers: Record<string, string>,
+): Promise<FeedResponse> {
+	const response = await fetch(url, {
+		headers,
+		signal: AbortSignal.timeout(FEED_TIMEOUT_MS),
+	});
+
+	return {
+		ok: response.ok,
+		status: response.status,
+		statusText: response.statusText,
+		contentType: response.headers.get("content-type"),
+		body: await response.text(),
+	};
+}
+
+function isRss(body: string) {
+	return /<rss[\s>]/i.test(body);
+}
+
+async function fetchFeedXml(url: string) {
+	const direct = await request(url, feedHeaders).catch(failedRequest);
+
+	if (direct.ok && isRss(direct.body)) {
+		return direct.body;
+	}
+
+	console.warn(
+		`parseRssFeed: ${url} failed directly (${direct.status} ${direct.statusText}); retrying via ${FEED_PROXY}.`,
+	);
+
+	const proxied = await request(`${FEED_PROXY}/${url}`, {
+		...feedHeaders,
+		"x-return-format": "html",
+	}).catch(failedRequest);
+
+	if (proxied.ok && isRss(proxied.body)) {
+		return proxied.body;
+	}
+
+	throw new Error(
+		`parseRssFeed: ${url} failed directly (${direct.status} ${direct.statusText}: ${direct.body.slice(0, 200)}) and via ${FEED_PROXY} (${proxied.status} ${proxied.statusText}: ${proxied.body.slice(0, 200)}).`,
+	);
+}
 
 function getTagContent(tag: string, content: string) {
 	const regex = new RegExp(`<${tag}[^>]*>(.*?)<\/${tag}>`, "s");
@@ -25,32 +96,12 @@ export default async function parseRssFeed(url: string | undefined) {
 		);
 	}
 
-	const r = await fetch(url, {
-		headers: feedHeaders,
-		signal: AbortSignal.timeout(FEED_TIMEOUT_MS),
-	});
-
-	if (!r.ok) {
-		const body = await r.text();
-
-		throw new Error(
-			`parseRssFeed: ${url} responded with ${r.status} ${r.statusText}. Body: ${body.slice(0, 300)}`,
-		);
-	}
-
-	const xmlText = await r.text();
-
-	if (!/<rss[\s>]/i.test(xmlText)) {
-		throw new Error(
-			`parseRssFeed: ${url} did not return an RSS feed (content-type: ${r.headers.get("content-type") ?? "unknown"}). Body: ${xmlText.slice(0, 300)}`,
-		);
-	}
+	const xmlText = await fetchFeedXml(url);
 
 	const itemRegex = /<item>([\s\S]*?)<\/item>/g;
 	const items = [];
-	let match;
 
-	while ((match = itemRegex.exec(xmlText)) !== null) {
+	for (const match of xmlText.matchAll(itemRegex)) {
 		const content = match[1];
 
 		items.push({
